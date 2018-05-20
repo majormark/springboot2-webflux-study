@@ -1,15 +1,24 @@
 package com.major.webflux.handler;
 
+import com.major.webflux.dao.CityRepository;
+import com.major.webflux.domain.City;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
 public class CityHandler {
 
+    private final CityRepository cityRepository;
+    @Autowired
+    public CityHandler(CityRepository cityRepository) {
+        this.cityRepository = cityRepository;
+    }
     /**
      * ServerResponse 是对响应的封装，可以设置响应状态、响应头、响应正文。比如 ok 代表的是 200 响应码、MediaType 枚举是代表这文本内容类型、返回的是 String 的对象。
      *
@@ -22,4 +31,26 @@ public class CityHandler {
         return ServerResponse.ok().contentType(MediaType.TEXT_PLAIN)
                 .body(BodyInserters.fromObject("Hello, City!"));
     }
+
+
+    public Mono<Long> save(City city) {
+        return Mono.create(cityMonoSink -> cityMonoSink.success(cityRepository.save(city)));
+    }
+
+    public Mono<City> findCityById(Long id) {
+        return Mono.justOrEmpty(cityRepository.findCityById(id));
+    }
+
+    public Flux<City> findAllCity() {
+        return Flux.fromIterable(cityRepository.findAll());
+    }
+
+    public Mono<Long> modifyCity(City city) {
+        return Mono.create(cityMonoSink -> cityMonoSink.success(cityRepository.updateCity(city)));
+    }
+
+    public Mono<Long> deleteCity(Long id) {
+        return Mono.create(cityMonoSink -> cityMonoSink.success(cityRepository.deleteCity(id)));
+    }
+
 }
