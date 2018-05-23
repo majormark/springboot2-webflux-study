@@ -25,13 +25,13 @@ public class CityWebFluxController {
     }
 
     @PostMapping()
-    public Mono<Long> saveCity(@RequestBody City city) {
+    public Mono<City> saveCity(@RequestBody City city) {
         return cityHandler.save(city);
     }
 
     @PutMapping()
-    public Mono<Long> modifyCity(@RequestBody City city) {
-        return cityHandler.modifyCity(city);
+    public Mono<City> modifyCity(@RequestBody City city) {
+        return cityHandler.save(city);
     }
 
     @DeleteMapping(value = "/{id}")
