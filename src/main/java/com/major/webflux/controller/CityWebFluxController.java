@@ -3,11 +3,14 @@ package com.major.webflux.controller;
 import com.major.webflux.domain.City;
 import com.major.webflux.handler.CityHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.time.Duration;
 
 @Controller
 @RequestMapping(value = "/city")
@@ -22,7 +25,7 @@ public class CityWebFluxController {
         return cityHandler.findCityById(id);
     }
 
-    @GetMapping()
+    @GetMapping(value = "/list", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     @ResponseBody
     public Flux<City> findAllCity() {
         return cityHandler.findAllCity();
